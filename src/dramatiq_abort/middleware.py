@@ -46,12 +46,18 @@ class Abortable(Middleware):
         option.
     """
 
-    def __init__(self, *, backend: EventBackend, abortable: bool = True):
+    def __init__(
+        self,
+        *,
+        backend: EventBackend,
+        abortable: bool = True,
+        abort_ttl: int = 90_000,
+    ):
         self.logger = get_logger(__name__, type(self))
         self.abortable = abortable
         self.backend = backend
         self.wait_timeout = 1000
-        self.abort_ttl = 90000
+        self.abort_ttl = abort_ttl
         self.abortables: Dict[str, int] = {}
         # This lock avoid race between the monitor and a task cleaning up.
         self.lock = threading.Lock()
